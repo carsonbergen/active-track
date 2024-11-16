@@ -1,6 +1,8 @@
 'use client';
 
 import {useMemo, useState} from "react";
+import {Translations} from "@/types";
+import {twMerge} from "tailwind-merge";
 
 function WorkoutRow({
                         id,
@@ -20,7 +22,8 @@ function WorkoutRow({
     }, [id, done, sets, reps]);
 
     return (
-        <div key={`${id}-name`} className={`w-full h-fit p-1 bg-black rounded-xl flex flex-col items-center justify-center px-1 py- space-y-2`}>
+        <div key={`${id}-name`}
+             className={`w-full h-fit p-1 bg-black rounded-xl flex flex-col items-center justify-center px-1 py- space-y-2`}>
             <div className={`flex flex-row w-full h-full items-center justify-start space-x-2`}>
                 <input type="checkbox" defaultChecked={false} className="checkbox w-12 h-12 border-gray-700"
                        onChange={(e) => {
@@ -66,7 +69,11 @@ function WorkoutRow({
         ;
 }
 
-export default function Workspace() {
+export default function Workspace({
+                                      translations
+                                  }: {
+    translations: Translations,
+}) {
     const [exercises, setExercises] = useState([
         {
             name: 'Bench Press',
@@ -81,37 +88,54 @@ export default function Workspace() {
             reps: 3,
         }
     ]);
+
+    useMemo(() => {
+        if (translations.frontTranslation) {
+            console.log("User looking at screen");
+        } else if (translations.frontTranslation == null) {
+            console.log("User looking away");
+        }
+        console.log(translations.frontTranslation)
+    }, [translations]);
+
     return (
-        <div className={`w-80 h-80 relative bg-[#00000080] rounded-2xl backdrop-blur-3xl`}>
-            {/* Background */}
             <div
-                className={`
+                className={twMerge(
+                    `w-80 h-80 relative bg-[#00000080] rounded-2xl backdrop-blur-3xl`,
+                    translations.frontTranslation ? 'opacity-100' : 'opacity-0',
+                    `transition-all duration-300`
+                )}
+
+            >
+                {/* Background */}
+                <div
+                    className={`
                     left-0 top-0 w-full h-full 
                     bg-transparent
                     rounded-2xl
                 `}
-            />
+                />
 
-            {/* Front content*/}
-            <div className={`absolute left-0 top-0 w-full h-full text-white bg-transparent pt-8 px-2`}>
-                <h1 className={`text-3xl font-bold`}>Carson Bergen</h1>
-                <div className={`flex flex-col space-y-2`}>
-                    {exercises.map((exercise, index: number) => (
-                        <WorkoutRow
-                            key={index}
-                            id={index}
-                            name={exercise.name}
-                            onUpdateExercise={(index: number, newDone: boolean, newSets: number, newReps: number): void => {
-                                const newExercises = exercises;
-                                newExercises[index].done = newDone;
-                                newExercises[index].sets = newSets;
-                                newExercises[index].reps = newReps;
-                                setExercises(newExercises);
-                            }}
-                        />
-                    ))}
+                {/* Front content*/}
+                <div className={`absolute left-0 top-0 w-full h-full text-white bg-transparent pt-8 px-2`}>
+                    <h1 className={`text-3xl font-bold`}>Carson Bergen</h1>
+                    <div className={`flex flex-col space-y-2`}>
+                        {exercises.map((exercise, index: number) => (
+                            <WorkoutRow
+                                key={index}
+                                id={index}
+                                name={exercise.name}
+                                onUpdateExercise={(index: number, newDone: boolean, newSets: number, newReps: number): void => {
+                                    const newExercises = exercises;
+                                    newExercises[index].done = newDone;
+                                    newExercises[index].sets = newSets;
+                                    newExercises[index].reps = newReps;
+                                    setExercises(newExercises);
+                                }}
+                            />
+                        ))}
+                    </div>
                 </div>
             </div>
-        </div>
     );
 }

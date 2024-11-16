@@ -1,0 +1,3 @@
+[submodule "app/utils/js-aruco2"]
+	path = app/utils/js-aruco2
+	url = https://github.com/damianofalcioni/js-aruco2
