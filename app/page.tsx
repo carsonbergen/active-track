@@ -13,7 +13,7 @@ export default function Home() {
     });
 
     return (
-        <div className={`w-screen h-screen p-8 bg-gradient-to-br from-black via-green-200 to-black font-outfit`}>
+        <div className={`w-screen h-screen p-8 bg-gradient-to-br from-black via-green-200 to-black font-outfit flex justify-center items-center`}>
             <Workspace translations={translations} />
             <FaceTracker onTranslationsChange={setTranslations}/>
         </div>
